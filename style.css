@@ -250,15 +250,14 @@ body {
 }
 
 .card-grid-left {
-    width: 70%;
+    width: 100%; /* 占满全部宽度 */
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* 变为三列 */
     gap: 20px;
 }
 
 .content-right {
-    width: 30%;
-    /* 右侧内容区域的样式待定 */
+    display: none; /* 不再需要右侧区域 */
 }
 
 .card {
@@ -480,8 +479,7 @@ body {
         flex-direction: column;
     }
 
-    .card-grid-left,
-    .content-right {
+    .card-grid-left {
         width: 100%;
     }
 
