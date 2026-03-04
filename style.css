@@ -265,10 +265,12 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     transition: background-color 0.3s ease;
+    display: flex; /* 改为 flex 布局 */
+    flex-direction: column; /* 垂直排列 */
 }
 
 .card-image {
-    height: 200px;
+    height: 150px; /* 减小图片高度 */
     overflow: hidden;
 }
 
@@ -280,16 +282,22 @@ body {
 }
 
 .card-content {
-    padding: 20px;
+    padding: 15px; /* 减小内边距 */
+    flex-grow: 1; /* 填充剩余空间 */
+    display: flex;
+    flex-direction: column;
 }
 
 .card-content h3 {
     margin-top: 0;
+    font-size: 1.2rem; /* 调整标题大小 */
 }
 
 .card-content p {
     color: #555;
     transition: color 0.3s ease;
+    font-size: 0.9rem; /* 调整段落文字大小 */
+    flex-grow: 1; /* 填充剩余空间 */
 }
 
 .card-details {
