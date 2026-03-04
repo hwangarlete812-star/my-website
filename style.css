@@ -252,7 +252,7 @@ body {
 .card-grid-left {
     width: 100%; /* 占满全部宽度 */
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 变为三列 */
+    grid-template-columns: repeat(2, 1fr); /* 变为两列 */
     gap: 20px;
 }
 
