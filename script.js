@@ -178,6 +178,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     chatInput.addEventListener('input', autoResizeTextarea);
 
+    // 新增：留言板功能
+    const feedbackForm = document.getElementById('feedback-form');
+    const commentsContainer = document.getElementById('comments-container');
+
+    feedbackForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // 阻止表单默认的提交行为
+
+        const contactInput = document.getElementById('contact');
+        const messageInput = document.getElementById('message');
+
+        const contact = contactInput.value.trim();
+        const message = messageInput.value.trim();
+
+        if (message === '') {
+            alert('反馈意见不能为空哦！');
+            return;
+        }
+
+        const commentCard = document.createElement('div');
+        commentCard.classList.add('comment-card');
+
+        const messageP = document.createElement('p');
+        messageP.textContent = message;
+
+        const contactP = document.createElement('p');
+        contactP.classList.add('comment-contact');
+        contactP.textContent = `来自：${contact || '一位匿名的朋友'}`;
+
+        commentCard.appendChild(messageP);
+        commentCard.appendChild(contactP);
+
+        commentsContainer.prepend(commentCard); // 使用 prepend 让新留言显示在最上面
+
+        // 清空表单
+        contactInput.value = '';
+        messageInput.value = '';
+    });
+
     // Social Hub
     const socialLinksContainer = document.querySelector('.social-links');
     const socialLinks = [
