@@ -252,18 +252,44 @@ body {
     flex-grow: 1;
     padding: 15px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 新增：对话气泡样式 */
+.chat-bubble {
+    padding: 10px 15px;
+    border-radius: 16px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.chat-bubble.user {
+    background-color: #E1E8ED; /* 浅灰蓝 */
+    align-self: flex-end;
+}
+
+.chat-bubble.ai {
+    background-color: #FDF5E6; /* 暖米色 */
+    align-self: flex-start;
 }
 
 .chat-input {
     display: flex;
     border-top: 1px solid #eee;
+    padding: 5px;
 }
 
-.chat-input input {
+.chat-input textarea {
     flex-grow: 1;
     border: none;
-    padding: 15px;
+    padding: 10px;
     outline: none;
+    resize: none; /* 禁止用户手动调整大小 */
+    font-family: inherit;
+    font-size: 1rem;
+    max-height: 100px; /* 限制最大高度 */
 }
 
 .chat-input button {
@@ -272,6 +298,8 @@ body {
     border: none;
     padding: 0 20px;
     cursor: pointer;
+    border-radius: 8px;
+    margin-left: 5px;
 }
 
 /* C. 底部区域：社交连接枢纽 */

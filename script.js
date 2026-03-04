@@ -76,14 +76,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatWindow = document.getElementById('ai-chat-window');
     const closeChat = document.getElementById('close-chat');
     const chatBody = document.querySelector('.chat-body');
+    const chatInput = document.querySelector('.chat-input textarea');
+    const sendButton = document.querySelector('.chat-input button');
+
+    // 存储对话历史
+    let conversationHistory = [];
+
+    // AI 配置
+    const AITutor = {
+        name: "HwangArlete812",
+        skills: ["Python", "React", "生成式 AI"],
+        contact: "您可以在页面底部找到他的社交媒体链接。"
+    };
+
+    // 系统提示，用于指导 AI 的行为
+    const systemPrompt = `你是一个个人网站的 AI 助手。你的名字叫“小助手”。你的任务是友好、自然地回答用户的问题。网站的主人是 ${AITutor.name}。他擅长的技术是 ${AITutor.skills.join(", ")}。他的联系方式是：${AITutor.contact}。请根据这些信息回答关于网站主人的问题。对于其他通用问题，请像一个聪明的助手一样回答。请保持回答简洁、亲切。`;
+
+    conversationHistory.push({ role: "system", content: systemPrompt });
 
     aiIcon.addEventListener('click', () => {
         chatWindow.classList.remove('hidden');
         aiIcon.classList.add('hidden');
         if (chatBody.children.length === 0) {
-            const welcomeMessage = document.createElement('div');
-            welcomeMessage.textContent = '你好！我是 [名字] 的私人助理。你可以问我关于他的工作经历、项目细节，或者聊聊他的兴趣爱好。';
-            chatBody.appendChild(welcomeMessage);
+            appendMessage('你好！我是 [名字] 的私人助理。你可以问我关于他的工作经历、项目细节，或者聊聊他的兴趣爱好。', 'ai');
         }
     });
 
@@ -92,46 +107,76 @@ document.addEventListener('DOMContentLoaded', function() {
         aiIcon.classList.remove('hidden');
     });
 
-    const knowledgeBase = {
-        "工作经历": "他曾在 XYZ 公司担任软件工程师，主要负责前端开发。",
-        "项目": "他独立开发了一个名为‘智能任务管理器’的 Web 应用，使用 React 和 Node.js 构建。",
-        "技术栈": "他主要专注于 Python 和 React，最近还在研究生成式 AI 的应用。",
-        "联系方式": "您可以在页面底部找到他的社交媒体链接，或者发送邮件到 [your-email@example.com]。"
-    };
-
-    const chatInput = document.querySelector('.chat-input input');
-    const sendButton = document.querySelector('.chat-input button');
-
-    function handleUserInput() {
-        const userInput = chatInput.value.trim();
-        if (userInput === '') return;
-
-        const userMessage = document.createElement('div');
-        userMessage.textContent = `你: ${userInput}`;
-        chatBody.appendChild(userMessage);
-
-        let response = '抱歉，我不太理解你的问题。你可以试试问我关于他的“工作经历”、“项目”或“技术栈”。';
-        for (const key in knowledgeBase) {
-            if (userInput.toLowerCase().includes(key.toLowerCase())) {
-                response = knowledgeBase[key];
-                break;
-            }
-        }
-
-        const aiResponse = document.createElement('div');
-        aiResponse.textContent = `AI: ${response}`;
-        chatBody.appendChild(aiResponse);
-
-        chatInput.value = '';
+    function appendMessage(text, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('chat-bubble', sender);
+        messageElement.textContent = text;
+        chatBody.appendChild(messageElement);
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
+    async function handleUserInput() {
+        const userInput = chatInput.value.trim();
+        if (userInput === '') return;
+
+        appendMessage(userInput, 'user');
+        conversationHistory.push({ role: "user", content: userInput });
+        chatInput.value = '';
+        autoResizeTextarea();
+
+        // 显示“正在输入”提示
+        const thinkingMessage = document.createElement('div');
+        thinkingMessage.classList.add('chat-bubble', 'ai');
+        thinkingMessage.textContent = '思考中...';
+        chatBody.appendChild(thinkingMessage);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        try {
+            const response = await fetch('https://aihubmix.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer sk-FrVBeeqZy0DJAYgx118c58D943Bb415eAc2542F06d12B180`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo", // 您可以根据 aihubmix 支持的模型进行更换
+                    messages: conversationHistory
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const aiResponse = data.choices[0].message.content;
+
+            // 移除“正在输入”提示并显示 AI 回答
+            chatBody.removeChild(thinkingMessage);
+            appendMessage(aiResponse, 'ai');
+            conversationHistory.push({ role: "assistant", content: aiResponse });
+
+        } catch (error) {
+            console.error("Error calling AI API:", error);
+            chatBody.removeChild(thinkingMessage);
+            appendMessage('抱歉，我好像遇到了一点网络问题，请稍后再试。', 'ai');
+        }
+    }
+
     sendButton.addEventListener('click', handleUserInput);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
             handleUserInput();
         }
     });
+
+    function autoResizeTextarea() {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+    }
+
+    chatInput.addEventListener('input', autoResizeTextarea);
 
     // Social Hub
     const socialLinksContainer = document.querySelector('.social-links');
