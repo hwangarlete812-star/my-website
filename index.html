@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字名片：[你的名字] 的交互空间</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. 顶部区域：沉浸式照片轮播 -->
+    <section id="hero">
+        <div class="hero-carousel">
+            <!-- 照片将通过 JavaScript 动态添加 -->
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 id="user-name">[你的名字]</h1>
+            <p id="user-bio">设计师 | 开发者 | 终身学习者</p>
+        </div>
+        <div class="carousel-dots">
+            <!-- 导航点将通过 JavaScript 动态添加 -->
+        </div>
+    </section>
+
+    <!-- 2. 中部核心：悬浮式 AI 对话助手 -->
+    <div id="ai-companion">
+        <div id="ai-icon">
+            <!-- AI 头像图标 -->
+        </div>
+        <div id="ai-chat-window" class="hidden">
+            <div class="chat-header">
+                <span>AI 助手</span>
+                <button id="close-chat">-</button>
+            </div>
+            <div class="chat-body">
+                <!-- 聊天内容 -->
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="输入你的问题...">
+                <button>发送</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 底部区域：社交连接枢纽 -->
+    <footer id="social-hub">
+        <div class="footer-content">
+            <p>&copy; 2026 [你的名字]</p>
+            <div class="social-links">
+                <!-- 社交媒体图标将通过 JavaScript 动态添加 -->
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
