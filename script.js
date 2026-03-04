@@ -1,4 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const splashScreen = document.getElementById('splash-screen');
+
+    function enterWebsite() {
+        if (splashScreen) {
+            splashScreen.classList.add('hidden');
+            // 在动画结束后将其从 DOM 中移除，以优化性能
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+            }, 800); // 这里的延迟应与 CSS 中的 transition 时间一致
+        }
+    }
+
+    // 添加一次性事件监听器
+    window.addEventListener('click', enterWebsite, { once: true });
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            enterWebsite();
+        }
+    }, { once: true });
+
     const slides = [
         'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
