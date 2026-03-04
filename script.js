@@ -154,4 +154,17 @@ document.addEventListener('DOMContentLoaded', function() {
         linkElement.appendChild(iconElement);
         socialLinksContainer.appendChild(linkElement);
     });
+
+    // 新增：互动卡片点击事件
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const details = card.querySelector('.card-details');
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+            }
+        });
+    });
 });
