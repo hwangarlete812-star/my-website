@@ -118,6 +118,12 @@ body {
     justify-content: center;
     align-items: center;
     animation: pulse 2s infinite;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#ai-icon img {
+    width: 55%;
+    height: 55%;
 }
 
 @keyframes pulse {
