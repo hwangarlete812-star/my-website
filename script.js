@@ -1,17 +1,79 @@
 document.addEventListener('DOMContentLoaded', function() {
     const splashScreen = document.getElementById('splash-screen');
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    let mouse = { x: null, y: null, radius: 150 };
+    let animationFrameId;
+
+    function init() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < 200; i++) {
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            let radius = Math.random() * 1.5;
+            let vx = (Math.random() - 0.5) * 0.2;
+            let vy = (Math.random() - 0.5) * 0.2;
+            stars.push({ x, y, radius, vx, vy });
+        }
+    }
+
+    function animate() {
+        animationFrameId = requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        stars.forEach(star => {
+            // Mouse interaction
+            let dx = mouse.x - star.x;
+            let dy = mouse.y - star.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < mouse.radius) {
+                star.x -= dx / 20; // Push away
+                star.y -= dy / 20;
+            } else {
+                star.x += star.vx;
+                star.y += star.vy;
+            }
+
+            // Wall collision
+            if (star.x < 0 || star.x > canvas.width) star.vx = -star.vx;
+            if (star.y < 0 || star.y > canvas.height) star.vy = -star.vy;
+
+            // Draw star
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        });
+    }
 
     function enterWebsite() {
         if (splashScreen) {
             splashScreen.classList.add('hidden');
-            // 在动画结束后将其从 DOM 中移除，以优化性能
+            cancelAnimationFrame(animationFrameId); // 停止动画
             setTimeout(() => {
                 splashScreen.style.display = 'none';
-            }, 800); // 这里的延迟应与 CSS 中的 transition 时间一致
+            }, 800);
         }
     }
 
-    // 添加一次性事件监听器
+    window.addEventListener('mousemove', (event) => {
+        mouse.x = event.x;
+        mouse.y = event.y;
+    });
+
+    window.addEventListener('resize', () => {
+        init();
+    });
+
+    // Start animation
+    init();
+    animate();
+
+    // Add event listeners to enter
     window.addEventListener('click', enterWebsite, { once: true });
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
